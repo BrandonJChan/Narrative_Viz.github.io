@@ -1,8 +1,8 @@
 Game,PointDifferential,Outcome,SeriesState
-1,3,Kings Win 126 - 123,Kings leading series 1-0
-2,11,Kings Win 114 - 106,Kings leading series 2-0
-3,-6,Warriors Win 114 - 97,Kings leading series 2-1
-4,-7,Warriors Win 126 - 125,Series tied 2-2
-5,-14,Warriors Win 123 - 116,Warriors leading series 3-2
-6,5,Kings Win 118 - 99,Series tied 3-3
-7,-15,Warriors Win 120 - 100,Warriors win series 4-3
+Game 1,3,Kings Win 126 - 123,Kings leading series 1-0
+Game 2,11,Kings Win 114 - 106,Kings leading series 2-0
+Game 3,-6,Warriors Win 114 - 97,Kings leading series 2-1
+Game 4,-7,Warriors Win 126 - 125,Series tied 2-2
+Game 5,-14,Warriors Win 123 - 116,Warriors leading series 3-2
+Game 6,5,Kings Win 118 - 99,Series tied 3-3
+Game 7,-15,Warriors Win 120 - 100,Warriors win series 4-3
