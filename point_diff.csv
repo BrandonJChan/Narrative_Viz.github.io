@@ -1,8 +1,8 @@
-Game,PointDifferential,Outcome,SeriesState
-Game 1,3,Kings Win 126 - 123,Kings leading series 1-0
-Game 2,11,Kings Win 114 - 106,Kings leading series 2-0
-Game 3,-6,Warriors Win 114 - 97,Kings leading series 2-1
-Game 4,-7,Warriors Win 126 - 125,Series tied 2-2
-Game 5,-14,Warriors Win 123 - 116,Warriors leading series 3-2
-Game 6,5,Kings Win 118 - 99,Series tied 3-3
-Game 7,-15,Warriors Win 120 - 100,Warriors win series 4-3
+Game,PointDifferential,Outcome,SeriesState,ArticleTitle,ArticleSub
+1,3,Kings Win 126 - 123,Kings leading series 1-0,"""Sacramento Kings win first playoff game in 17 years with defeat of Golden State Warriors in Game 1""","""The Sacramento Kings could not have enjoyed a better start to their return to the playoffs for the first time in 17 years."" - CNN"
+2,11,Kings Win 114 - 106,Kings leading series 2-0,"""Warriors collapse under pressure, Kings play like experienced playoff vets in bizarre Game 2 role reversal""","""Sacramento played like the defending champ on Monday, with Golden State looking like the postseason newbie"" - CBS Sports"
+3,-6,Warriors Win 114 - 97,Kings leading series 2-1,"""Curry Scores 36, Warriors Beat Kings 114-97 Without Green""","""Leading up to Game 3, Steve Kerr shared with Golden State's players his favorite John Wooden quote of all time: 'Be quick, but don’t hurry.'"" -AP"
+4,-7,Warriors Win 126 - 125,Series tied 2-2,"""Warriors survive De'Aaron Fox, late Stephen Curry blunder in Game 4 thriller to tie Kings at 2-2""","""A Game 4 thriller turned into a high-stakes backcourt duel in San Francisco on Sunday as the Golden State Warriors pulled out a 126-125 win over the Sacramento Kings."" - Yahoo Sports"
+5,-14,Warriors Win 123 - 116,Warriors leading series 3-2,"""Warriors hold on to win Game 5 on the road, take 3-2 series lead over Kings""","""After a historically bad start to the series, the Golden State Warriors are just a win away from stunning the Sacramento Kings."" - Yahoo Sports"
+6,5,Kings Win 118 - 99,Series tied 3-3,"""Forcing Game 7, the Youthful Kings Make Golden State Look 'a Little Tired'""","""Sacramento, which hasn't won a playoff series in 19 seasons, is using its youth to its advantage against the defending champions."" - New York Times"
+7,-15,Warriors Win 120 - 100,Warriors win series 4-3,"""Stephen Curry Scores 50 Points to Knock Off Kings in Game 7""","""Curry's 50 points were the most ever in a Game 7, helping Golden State survive a contentious first-round series with Sacramento."" - New York Times"
