@@ -1,11 +1,404 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-<body>
-<svg width=100 height=350>
+<body onload='init()'>
+
+<h1 style="font-family:sans-serif;">The Underdog Overthrow: Kings vs. Warriors 2023 NBA Playoffs</h1>
+<p style="font-family:sans-serif";>By Brandon Chan</p>
+
+<img src="https://github.com/BrandonJChan/Narrative_Viz.github.io/blob/main/kings_logo.png?raw=true"
+  width=100
+  height = auto
+  align = "left"
+  alt="kings logo">
+
+<img src="https://github.com/BrandonJChan/Narrative_Viz.github.io/blob/main/warriors_logo.png?raw=true"
+  width=100
+  height = auto
+  align = "right"
+  alt="warriors logo">
+
+<style>
+.container {
+  height: 25px;
+  position: relative;
+  border: 0px solid black;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+</style>
+
+<div class="container">
+  <div class="center">
+    <button type="button" onclick="init(0)">Intro</button>
+    <button type="button" onclick="init(1)">Game 1</button>
+    <button type="button" onclick="init(2)">Game 2</button>
+    <button type="button" onclick="init(3)">Game 3</button>
+    <button type="button" onclick="init(4)">Game 4</button>
+    <button type="button" onclick="init(5)">Game 5</button>
+    <button type="button" onclick="init(6)">Game 6</button>
+    <button type="button" onclick="init(7)">Game 7</button>
+  </div>
+</div>
+  
+<svg width=1250 height=700 style= "display: block; margin: auto">
 </svg>
-</body>
 <script>
-var data = [4,8,15,16,23,42];
-d3.select('svg').selectAll("circle").data(data).enter().append("circle").attr("cx", 50).attr("cy", function(d,i){return (i+1) * 50;}).attr("r", function(d){return d;});
+async function init(game_num=0) {
+
+d3.select('svg').selectAll("*").remove()
+
+var margin = {top_bottom: 150, left_right: 200},
+height = d3.select("svg").attr("height") - 2*margin.top_bottom,
+width = d3.select("svg").attr("width") - 2*margin.left_right;
+
+var game_data = await d3.csv("https://raw.githubusercontent.com/BrandonJChan/Narrative_Viz.github.io/main/game_stats.csv")
+
+//Function to create drill down page
+async function drill_down(game){
+  d3.select('svg').selectAll("*").remove();
+
+  var bar_margin = {top_bottom: 150, left_right: 100},
+  bar_height = d3.select("svg").attr("height") - 2*bar_margin.top_bottom,
+  bar_width = d3.select("svg").attr("width") - 2*bar_margin.left_right
+
+    var single_game = game_data.filter(function(d){
+    return d.Game == game
+  });
+
+    kings_stats = single_game.filter(function(d){
+        if (d.Team == "Kings"){
+            return d;
+        }
+    })
+
+    warriors_stats = single_game.filter(function(d){
+        if (d.Team == "Warriors"){
+            return d;
+        }
+    })
+
+  //Title
+  d3.select("svg")
+  .append("text")
+  .attr("x", bar_width/2 + bar_margin.left_right)
+  .attr("y", 40)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style('font-weight', "bold")
+  .style("font-size", "25px")
+  .text(game + " Summary");
+
+  //Kings Points
+  d3.select("svg")
+  .append("text")
+  .attr("x", bar_width/2 + bar_margin.left_right - 200)
+  .attr("y", 90)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style('font-weight', "bold")
+  .style("font-size", "20px")
+  .text("Sacramento Kings - " + kings_stats[0].Points);
+
+  //Warriors Points
+  d3.select("svg")
+  .append("text")
+  .attr("x", bar_width/2 + bar_margin.left_right + 200)
+  .attr("y", 90)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style('font-weight', "bold")
+  .style("font-size", "20px")
+  .text("Golden State Warriors - " + warriors_stats[0].Points);
+
+  //Axes
+  var team_scale = d3.scaleBand().domain(['Kings', 'Warriors']).range([0, bar_width/4]),
+    assists_scale = d3.scaleLinear().domain([0, d3.max(game_data, function(d) { return +d.Assists; })]).range([bar_height, 0])
+    rebounds_scale = d3.scaleLinear().domain([0, d3.max(game_data, function(d) { return +d.Rebounds; })]).range([bar_height, 0])
+    blocks_scale = d3.scaleLinear().domain([0, d3.max(game_data, function(d) { return +d.Blocks; })]).range([bar_height, 0])
+
+    //X Axes
+    d3.select("svg")
+    .append("g")
+    .attr("transform", "translate("+(bar_margin.left_right)+","+(bar_height+bar_margin.top_bottom)+")")
+    .call(d3.axisBottom(team_scale))
+
+    d3.select("svg")
+    .append("g")
+    .attr("transform", "translate("+(bar_width - 575)+","+(bar_height+bar_margin.top_bottom)+")")
+    .call(d3.axisBottom(team_scale))
+
+    d3.select("svg")
+    .append("g")
+    .attr("transform", "translate("+(bar_width-2*bar_margin.left_right)+","+(bar_height+bar_margin.top_bottom)+")")
+    .call(d3.axisBottom(team_scale))
+
+    //Y Axes
+    d3.select("svg")
+    .append("g")
+    .attr("transform", "translate("+bar_margin.left_right+","+bar_margin.top_bottom+")")
+    .call(d3.axisLeft(assists_scale));
+
+    d3.select("svg")
+    .append("g")
+    .attr("transform", "translate("+(bar_width - 575)+","+bar_margin.top_bottom+")")
+    .call(d3.axisLeft(rebounds_scale));
+
+    d3.select("svg")
+    .append("g")
+    .attr("transform", "translate("+(bar_width-2*bar_margin.left_right)+","+bar_margin.top_bottom+")")
+    .call(d3.axisLeft(blocks_scale));
+
+    //Axis Labels
+    d3.select("svg")
+    .append("text")
+    .attr("transform", "translate("+(bar_margin.left_right-30)+","+(bar_margin.top_bottom + bar_height/2)+")rotate(-90)")
+    .attr("text-anchor", "middle")
+    .attr("font-family", "sans-serif")
+    .style("font-size", "15px")
+    .text("Assists");
+
+    d3.select("svg")
+    .append("text")
+    .attr("transform", "translate("+(bar_width - 575-30)+","+(bar_margin.top_bottom + bar_height/2)+")rotate(-90)")
+    .attr("text-anchor", "middle")
+    .attr("font-family", "sans-serif")
+    .style("font-size", "15px")
+    .text("Rebounds");
+
+    d3.select("svg")
+    .append("text")
+    .attr("transform", "translate("+(bar_width-2*bar_margin.left_right-30)+","+(bar_margin.top_bottom + bar_height/2)+")rotate(-90)")
+    .attr("text-anchor", "middle")
+    .attr("font-family", "sans-serif")
+    .style("font-size", "15px")
+    .text("Blocks");
+
+    //Bars
+    d3.select("svg")
+    .append('g')
+    .attr("transform", "translate("+(bar_margin.left_right+40)+","+bar_margin.top_bottom+")")
+    .selectAll("rect")
+    .data(single_game)
+    .enter().append('rect')
+    .attr('x', function(d, i){return team_scale(d.Team)})
+    .attr('y', function(d){return assists_scale(d.Assists)})
+    .attr('width', 50)
+    .attr('height', function(d){return bar_height - assists_scale(d.Assists)})
+    .attr('fill',function(d){
+        if(d.Team == 'Kings'){
+            return "#5A2D81"
+        } else {
+            return "#006BB6"
+        }
+    })
+    .append('title')
+    .text(function(d){
+    return d.Assists + " Assists";
+    })
+    ;
+
+    d3.select("svg")
+    .append('g')
+    .attr("transform", "translate("+(bar_width - 575+40)+","+bar_margin.top_bottom+")")
+    .selectAll("rect")
+    .data(single_game)
+    .enter().append('rect')
+    .attr('x', function(d, i){return team_scale(d.Team)})
+    .attr('y', function(d){return rebounds_scale(d.Rebounds)})
+    .attr('width', 50)
+    .attr('height', function(d){return bar_height - rebounds_scale(d.Rebounds)})
+    .attr('fill',function(d){
+        if(d.Team == 'Kings'){
+            return "#5A2D81"
+        } else {
+            return "#006BB6"
+        }
+    })
+    .append('title')
+    .text(function(d){
+    return d.Rebounds + " Rebounds";
+    });
+
+    d3.select("svg")
+    .append('g')
+    .attr("transform", "translate("+(bar_width-2*bar_margin.left_right+40)+","+bar_margin.top_bottom+")")
+    .selectAll("rect")
+    .data(single_game)
+    .enter().append('rect')
+    .attr('x', function(d, i){return team_scale(d.Team)})
+    .attr('y', function(d){return blocks_scale(d.Blocks)})
+    .attr('width', 50)
+    .attr('height', function(d){return bar_height - blocks_scale(d.Blocks)})
+    .attr('fill',function(d){
+        if(d.Team == 'Kings'){
+            return "#5A2D81"
+        } else {
+            return "#006BB6"
+        }
+    })
+    .append('title')
+    .text(function(d){
+    return d.Blocks + " Blocks";
+  });  
+
+}
+
+//load data
+var full_data = await d3.csv("https://raw.githubusercontent.com/BrandonJChan/Narrative_Viz.github.io/main/point_diff.csv")
+
+const arrayRange = (start, stop, step) =>
+    Array.from(
+    { length: (stop - start) / step + 1 },
+    (value, index) => start + index * step
+    );
+
+const games = arrayRange(1, game_num, 1)
+
+var data = full_data.filter(function(d){
+  return games.includes(parseInt(d.Game.slice(-1)))
+})
+
+//Define X Axis
+var cxs = d3.scaleBand()
+  .domain(["Game 1", "Game 2", "Game 3", "Game 4", "Game 5", "Game 6", "Game 7"])
+  .range([0, width]);
+
+d3.select("svg")
+  .append("g")
+  .attr("transform", "translate("+margin.left_right+","+(height/2+margin.top_bottom)+")")
+  .call(d3.axisBottom(cxs));
+
+//Define Y Axis
+var point_diff = data.map(d => +d.PointDifferential);
+var cys = d3.scaleLinear()
+  .domain([-16, 16])
+  .range([height, 0]);
+var ys = point_diff.map(value => cys(value));
+
+d3.select("svg")
+  .append("g")
+  .attr("transform", "translate("+margin.left_right+","+margin.top_bottom+")")
+  .call(d3.axisLeft(cys));
+
+//Add line
+d3.select("svg")
+  .append("path")
+  .attr("transform", "translate("+(margin.left_right+width/14)+","+margin.top_bottom+")")
+  .datum(data)
+  .attr("fill", "none")
+  .attr("stroke", "black")
+  .attr("stroke-width", 2)
+  .attr("d", d3.line()
+    .y(function(d, i) {return ys[i]})
+    .x(function(d) {return cxs(d.Game)})
+    );
+
+//Add Points
+d3.select("svg")
+  .append("g")
+  .attr("transform", "translate("+(margin.left_right+width/14)+","+margin.top_bottom+")")
+  .selectAll("circle")
+  .data(data)
+  .enter()
+  .append("circle")
+  .on('click', function(d){drill_down(d.Game)})
+  .attr("cx", function(d) {return cxs(d.Game)})
+  .attr("cy", function(d, i) {return ys[i]})
+  .attr("r", 10)
+  .attr("fill", function(d, i){
+    if (point_diff[i] > 0){
+      return "#5A2D81";
+    } else {
+      return "#006BB6";
+    }
+  })
+  .style('stroke', function(d, i){
+    if (point_diff[i] > 0){
+      return "#63727A";
+    } else {
+      return "#FFC72C";
+    }
+  })
+  .style('stroke-width', 3)
+  .append('title')
+  .text(function(d){
+    return d.Outcome+"\n"+d.SeriesState+"\nRunning Point Differential: "+d.PointDifferential;
+  })
+
+//Add Chart Titles, Axes, and Helpers
+d3.select("svg")
+  .append("text")
+  .attr("x", width/2 + margin.left_right)
+  .attr("y", margin.top_bottom)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style("font-size", "18px")
+  .text("Playoff Series Running Point Differential");
+
+d3.select("svg")
+  .append("text")
+  .attr("transform", "translate("+(margin.left_right-30)+","+(margin.top_bottom + height/2)+")rotate(-90)")
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style("font-size", "15px")
+  .text("Point Differential");
+
+d3.select("svg")
+  .append("text")
+  .attr("transform", "translate("+(width+margin.left_right+45)+","+(margin.top_bottom + height/2 - 10)+")")
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style("font-size", "12px")
+  .text("↑ Kings scored more points");
+
+d3.select("svg")
+  .append("text")
+  .attr("transform", "translate("+(width+margin.left_right+45)+","+(margin.top_bottom + height/2 + 20)+")")
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style("font-size", "12px")
+  .text("↓ Warriors scored more points");
+
+//Add Article Headline
+d3.select("svg")
+  .append("text")
+  .attr("x", width/2 + margin.left_right)
+  .attr("y", 40)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "serif")
+  .style('font-weight', "bold")
+  .style("font-size", "25px")
+  .text(function(){
+    if (game_num == 0){
+      return '"'+"California’s Underdog Team Makes It to the N.B.A. Playoffs"+'"';
+    } else{
+      return full_data[game_num-1].ArticleTitle;
+    }
+  });
+
+//Add Article Sub Headline
+d3.select("svg")
+  .append("text")
+  .attr("x", width/2 + margin.left_right)
+  .attr("y", 60)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "serif")
+  .style("font-size", "16px")
+  .text(function(){
+    if (game_num == 0){
+      return '"'+"The Sacramento Kings are in the playoffs for the first time in 17 years, and they’re up against the heavily favored Golden State Warriors."+'"'+" - New York Times";
+    } else{
+      return full_data[game_num-1].ArticleSub;
+    }
+  });
+}
 </script>
+</body>
 </html>
