@@ -344,6 +344,15 @@ d3.select("svg")
 
 d3.select("svg")
   .append("text")
+  .attr("x", width/2 + margin.left_right)
+  .attr("y", margin.top_bottom + 15)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "sans-serif")
+  .style("font-size", "12px")
+  .text("Click on dots for details!");
+
+d3.select("svg")
+  .append("text")
   .attr("transform", "translate("+(margin.left_right-30)+","+(margin.top_bottom + height/2)+")rotate(-90)")
   .attr("text-anchor", "middle")
   .attr("font-family", "sans-serif")
